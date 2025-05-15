@@ -1,0 +1,30 @@
+name: Build .NET WebApp
+
+on:
+  push:
+    branches:
+      - '**'
+  schedule:
+    - cron: '0 * * * *' # Executa a cada hora
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restaurar dependências
+        run: dotnet restore github4women/github4women.csproj
+
+      - name: Build do projeto
+        run: dotnet build github4women/github4women.csproj --configuration Release --no-restore
+
+      - name: Script personalizado - Exibir data/hora da build
+        run: |
+          echo \"Build executada em: $(date)\"
